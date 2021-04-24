@@ -2,7 +2,8 @@ import React from 'react';
 import AppLoading from 'expo-app-loading';
 
 //#region pages
-import { Welcome } from './src/pages/Welcome';
+// import { Welcome } from './src/pages/Welcome';
+import { UserIndentification } from './src/pages/UserIndentification';
 //#endregion
 
 import {
@@ -20,7 +21,7 @@ export default function App() {
   if(!fontsLoaded) return <AppLoading />;
 
   return (
-    <Welcome />
+    <UserIndentification />
   );
 }
 
