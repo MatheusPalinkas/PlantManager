@@ -1,29 +1,32 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import colors from '../../styles/colors';
-import spacing from '../../styles/spacing';
+import fonts from '../../styles/fonts';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-around'
   },
   title: {
+    fontFamily: fonts.heading,
     fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',
     color: colors.heading,
-    marginTop: 36
+    marginTop: 36,
+    lineHeight: 38
   },
   subTitle: {
+    fontFamily: fonts.text,
     textAlign: 'center',
-    fontSize: 18,
-    paddingHorizontal: 20,
+    fontSize: 17,
+    paddingHorizontal: 44,
+    lineHeight: 25,
     color: colors.heading,
   },
   image:{
-    width: 292,
-    height: 284
+    height: Dimensions.get('window').width * 0.6
   },
   button: {
     backgroundColor: colors.green,
@@ -34,8 +37,8 @@ const styles = StyleSheet.create({
     height: 56,
     marginBottom: 16
   },
-  btnText: {
-    fontSize: 24,
+  btnIcon: {
+    fontSize: 32,
     color: colors.white
   }
 });
