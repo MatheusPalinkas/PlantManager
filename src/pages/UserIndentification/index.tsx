@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StorageKeys } from '../../utils/storageKeys';
 import {
   Text,
   View,
+  Alert,
   Keyboard,
   Platform,
   TextInput,
@@ -34,7 +37,11 @@ export function UserIndentification(){
     setName(value);
   }
 
-  function handleSubmit(){
+  async function handleSubmit(){
+    if(!name) 
+      return Alert.alert('Me diz como chamar você 😥');
+
+    await AsyncStorage.setItem(StorageKeys.userName, name);
     navigate("Confirmation");
   }
   

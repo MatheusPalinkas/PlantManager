@@ -144,7 +144,6 @@ export function PlantSelect() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Header
-          userName="Palinkas"
           userImg={UserImg}
         />
         <Text style={styles.title}>Em qual ambiente</Text> 

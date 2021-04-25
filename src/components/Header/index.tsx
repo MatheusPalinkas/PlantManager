@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StorageKeys } from '../../utils/storageKeys';
 import { View, Text, Image } from 'react-native';
 
 import styles from './styles';
 
 interface HeaderProps{
-  userName: string,
   userImg: any,
 }
 
-export function Header({ userName, userImg}: HeaderProps){
+export function Header({ userImg}: HeaderProps){
+  const [userName, setUserName] = useState<string>();
+
+  const loadStorageUserName = useCallback(async() => {
+    const user = await AsyncStorage.getItem(StorageKeys.userName);
+    
+    setUserName(user || '');
+  }, []);
+
+  useEffect(() => {
+    loadStorageUserName();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View>
