@@ -16,7 +16,7 @@ export function Header({ userName, userImg}: HeaderProps){
         <Text style={styles.userName}>{userName}</Text>
       </View>
       <Image
-        source={UserImg}
+        source={userImg}
         style={styles.img}
       />
     </View>
