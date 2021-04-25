@@ -2,55 +2,102 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useReducer,
 } from 'react';
 import api from '../../services/api';
-import { View, Text, SafeAreaView, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  SafeAreaView,
+  ActivityIndicator,
+} from 'react-native';
 import {
   Header,
+  Loading,
   PlantCardPrimary,
   EnviromentButton,
 } from '../../components';
-
+import {
+  PaginationPlants,
+  EnvironmentsProps,
+  reducerPlants,
+} from './IPlantSelect';
 import UserImg from '../../assets/palinkas.png';
 
 import styles from './styles';
+import colors from '../../styles/colors';
 
-interface EnvironmentsProps{
-  key: string;
-  title: string;
+const inicialState: PaginationPlants = {
+  plants: [],
+  loading: true,
+  page: 1,
+  limit: 8,
+  loadedAll: false,
+  loadingMore: false,
+  evironment: 'all',
 }
 
-interface PlantsProps{
-  id: string;
-  name: string;
-  about: string;
-  water_tips: string;
-  photo: string;
-  environments: string[];
-  frequency: {
-    times: number;
-    repeat_every: string;
+const reducer: reducerPlants = (state, action) => {
+  switch (action.type) {
+    case 'NO-MORE-LOADING':
+      return { ...state, loadedAll: true};
+    case 'ADD-PLANTS':
+        return {
+          ...state,
+          loading: false,
+          loadingMore: false,
+          plants: state.plants.concat(
+            (action.payload && action.payload.plants)
+              ? action.payload.plants
+              : []
+          ),
+        };
+    case 'CHANGE-ENVIRONMENT':
+      return {
+        ...inicialState,
+        evironment:
+          action.payload && action.payload.evironment
+            ? action.payload.evironment
+            : 'all',
+      };
+    case 'LOADING-MORE':
+      return {
+        ...state,
+        loadingMore: true,
+        page: state.page + 1,
+      };
+    default:
+      return state;
   }
-}
+};
 
 export function PlantSelect() {
-  const [activeEnvironment, setActiveEnvironment] = useState('all');
-  const [filteredPlants, setFilteredPlants] = useState<PlantsProps[]>([]);
-  
+  const [{
+    page,
+    limit,
+    plants,
+    loading,
+    loadedAll,
+    evironment,
+    loadingMore
+  }, dispatch] = useReducer(reducer, inicialState);
   const [environments, setEnvironments] = useState<EnvironmentsProps[]>([]);
-  const [plants, setPlants] = useState<PlantsProps[]>([]);
 
 
   function handleEnviromentSelect(enviroment: string){
-    setActiveEnvironment(enviroment);
+    dispatch({
+      type: 'CHANGE-ENVIRONMENT',
+      payload: {
+        evironment: enviroment
+      }
+    });
+  }
 
-    if(enviroment === 'all') {
-      setFilteredPlants(plants);
-      return;
-    }
-
-    const filtered = plants.filter(plant => plant.environments.includes(enviroment));
-    setFilteredPlants(filtered);
+  function handleFetchMore(distance: number){
+    if(distance < 1) return;
+  
+    if(!loadingMore) dispatch({ type: 'LOADING-MORE'});
   }
 
   const fetchEnviroment = useCallback(async () => {
@@ -65,16 +112,33 @@ export function PlantSelect() {
   }, []);
 
   const fetchPlants = useCallback(async () => {
-    const sort = `_sort=name&_order=asc`;
-    const { data } = await api.get(`/plants?${sort}`);
-    setPlants(data);
-    setFilteredPlants(data)
-  }, []);
+    if(loadedAll) return;
+    
+    const sort = `&_sort=name&_order=asc&`;
+    const pagination = `&_page=${page}&_limit=${limit}`;
+    const filter = evironment === 'all' ? '' : `&environments_like=${evironment}`;
+    const { data } = await api.get(`/plants?${filter}${sort}${pagination}`);
+
+    if(!data || data.length <= 0) dispatch({ type: 'NO-MORE-LOADING' });
+    
+
+    dispatch({
+      type: 'ADD-PLANTS',
+      payload: {
+        plants: data
+      } 
+    });
+  }, [page, evironment]);
   
   useEffect(() => {
     fetchEnviroment();
+  }, [fetchEnviroment]);
+
+  useEffect(() => {
     fetchPlants();
-  }, []);
+  }, [fetchPlants]);
+
+  if(loading) return <Loading />;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -97,7 +161,7 @@ export function PlantSelect() {
             <EnviromentButton
               key={item.key}
               title={item.title}
-              active={item.key=== activeEnvironment}
+              active={item.key=== evironment}
               onPress={() => handleEnviromentSelect(item.key)}
             />
           )}
@@ -106,7 +170,8 @@ export function PlantSelect() {
 
       <View style={styles.plants}>
         <FlatList
-          data={filteredPlants}
+          data={plants}
+          onEndReachedThreshold={0.1}
           showsVerticalScrollIndicator={false}
           numColumns={2}
           columnWrapperStyle={styles.plantsList}
@@ -116,6 +181,14 @@ export function PlantSelect() {
               data={item}
             />
           )}
+          onEndReached={({ distanceFromEnd }) =>
+            handleFetchMore(distanceFromEnd)
+          }
+          ListFooterComponent={
+            loadingMore
+              ? <ActivityIndicator color={colors.green} />
+              : <></>
+          }
         />
       </View>
     </SafeAreaView>
