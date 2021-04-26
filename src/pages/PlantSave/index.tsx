@@ -1,25 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
-  Image,
   Alert,
   Platform,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useRoute } from '@react-navigation/core';
+import { useNavigation, useRoute } from '@react-navigation/core';
 import DateTimePiker, {
   Event
 } from '@react-native-community/datetimepicker';
 import { format, isBefore } from 'date-fns';
 import { SvgFromUri } from 'react-native-svg';
 import { savePlants } from '../../libs/PlantsStorage';
-import { Button } from '../../components';
+import { Button, CardTip } from '../../components';
 
 import { PlantProps } from '../../libs/PlantsStorage';
 
-import WaterdropImg from '../../assets/waterdrop.png';
 import styles from './styles';
 
 interface Params {
@@ -27,6 +25,7 @@ interface Params {
 }
 
 export function PlantSave(){
+  const { navigate } = useNavigation();
   const { params } = useRoute();
   const { plant } = params as Params;
 
@@ -59,6 +58,13 @@ export function PlantSave(){
         ...plant,
         dateTimeNotification: selectedDateTime,
       });
+      navigate("Confirmation", {
+        title: 'Tudo certo',
+        subTitle: 'Fique tranquilo que sempre vamos lembrar você de cuidar da sua plantinha com bastante amor.',
+        buttonTitle: 'Muito obrigado :D',
+        icon: 'hug',
+        nextScreen: 'MyPlants',
+      });
     } catch (error) {
       Alert.alert('Não foi possivel salvar sua planta 😥');
     }
@@ -84,15 +90,10 @@ export function PlantSave(){
         </Text>
       </View>
       <View style={styles.controller}>
-        <View style={styles.tipContainer}>
-          <Image
-            style={styles.tipImg}
-            source={WaterdropImg}
-          />
-          <Text style={styles.tipText}>
-            {plant.water_tips}
-          </Text>
-        </View>
+        <CardTip 
+          description={plant.water_tips}
+          style={styles.cardTip}
+        />
 
         <Text style={styles.alertLabel}>
           Ecolha o melhor horário para ser lembrado:
