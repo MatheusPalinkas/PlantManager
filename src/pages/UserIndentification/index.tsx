@@ -41,8 +41,12 @@ export function UserIndentification(){
     if(!name) 
       return Alert.alert('Me diz como chamar você 😥');
 
-    await AsyncStorage.setItem(StorageKeys.userName, name);
-    navigate("Confirmation");
+    try {
+      await AsyncStorage.setItem(StorageKeys.userName, name);
+      navigate("Confirmation");
+    } catch (error) {
+      Alert.alert('Não foi possivel salvar o seu nome 😥');
+    }
   }
   
   return (

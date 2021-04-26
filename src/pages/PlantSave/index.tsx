@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -14,9 +14,10 @@ import DateTimePiker, {
 } from '@react-native-community/datetimepicker';
 import { format, isBefore } from 'date-fns';
 import { SvgFromUri } from 'react-native-svg';
+import { savePlants } from '../../libs/PlantsStorage';
 import { Button } from '../../components';
 
-import { PlantProps } from '../../libs/IPlantProps';
+import { PlantProps } from '../../libs/PlantsStorage';
 
 import WaterdropImg from '../../assets/waterdrop.png';
 import styles from './styles';
@@ -50,6 +51,17 @@ export function PlantSave(){
 
   function handleOpenDateTimePickerForAndroid(){
     setShowDatePicker(oldState => !oldState);
+  }
+
+  async function handleSave(){
+    try {
+      await savePlants({
+        ...plant,
+        dateTimeNotification: selectedDateTime,
+      });
+    } catch (error) {
+      Alert.alert('Não foi possivel salvar sua planta 😥');
+    }
   }
 
   return (
@@ -105,7 +117,7 @@ export function PlantSave(){
 
         <Button
           text="cadastrar planta"
-          onPress={() => {}}
+          onPress={handleSave}
         />
       </View>
     </ScrollView>

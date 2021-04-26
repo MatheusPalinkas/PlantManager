@@ -1,23 +1,11 @@
+import { PlantProps } from '../../libs/PlantsStorage';
 export interface EnvironmentsProps{
   key: string;
   title: string;
 }
 
-export interface PlantsProps{
-  id: string;
-  name: string;
-  about: string;
-  water_tips: string;
-  photo: string;
-  environments: string[];
-  frequency: {
-    times: number;
-    repeat_every: string;
-  }
-}
-
 export interface PaginationPlants {
-  plants: PlantsProps[];
+  plants: PlantProps[];
   loading: boolean;
   page: number;
   limit: number;
@@ -37,7 +25,7 @@ export type reducerPlants = (
   action: {
     type: actionType,
     payload?: {
-      plants?: PlantsProps[],
+      plants?: PlantProps[],
       evironment?: string,
     }
   }

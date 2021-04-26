@@ -1,3 +1,4 @@
 export enum StorageKeys {
-  userName = '@plantmanager:username'
+  userName = '@plantmanager:username',
+  plans = '@plantmanager:plants',
 }

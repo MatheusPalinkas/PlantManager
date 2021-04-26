@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useReducer,
 } from 'react';
+import { useNavigation } from '@react-navigation/core';
 import api from '../../services/api';
 import {
   View,
@@ -23,10 +24,12 @@ import {
   EnvironmentsProps,
   reducerPlants,
 } from './IPlantSelect';
+import { PlantProps } from '../../libs/PlantsStorage';
+
 import UserImg from '../../assets/palinkas.png';
 
-import styles from './styles';
 import colors from '../../styles/colors';
+import styles from './styles';
 
 const inicialState: PaginationPlants = {
   plants: [],
@@ -73,6 +76,7 @@ const reducer: reducerPlants = (state, action) => {
 };
 
 export function PlantSelect() {
+  const { navigate } = useNavigation();
   const [{
     page,
     limit,
@@ -98,6 +102,10 @@ export function PlantSelect() {
     if(distance < 1) return;
   
     if(!loadingMore) dispatch({ type: 'LOADING-MORE'});
+  }
+
+  function handlePlantSelect(plant: PlantProps){
+    navigate('PlantSave', { plant });
   }
 
   const fetchEnviroment = useCallback(async () => {
@@ -154,11 +162,12 @@ export function PlantSelect() {
         <FlatList
           horizontal
           data={environments}
+          keyExtractor={(item) => String(item.key)}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.enviromentList}
           renderItem={({ item }) => (
             <EnviromentButton
-              key={item.key}
+              key={String(item.key)}
               title={item.title}
               active={item.key=== evironment}
               onPress={() => handleEnviromentSelect(item.key)}
@@ -170,14 +179,16 @@ export function PlantSelect() {
       <View style={styles.plants}>
         <FlatList
           data={plants}
+          keyExtractor={(item) => String(item.id)}
           onEndReachedThreshold={0.1}
           showsVerticalScrollIndicator={false}
           numColumns={2}
           columnWrapperStyle={styles.plantsList}
           renderItem={({ item }) => (
             <PlantCardPrimary
-              key={item.id}
+              key={String(item.id)}
               data={item}
+              onPress={() => handlePlantSelect(item)}
             />
           )}
           onEndReached={({ distanceFromEnd }) =>
