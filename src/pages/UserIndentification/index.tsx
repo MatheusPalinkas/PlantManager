@@ -43,7 +43,13 @@ export function UserIndentification(){
 
     try {
       await AsyncStorage.setItem(StorageKeys.userName, name);
-      navigate("Confirmation");
+      navigate("Confirmation", {
+        title: 'Prontinho',
+        subTitle: 'Agora vamos começar a cuidar das suas plantinhas com muito cuidado.',
+        buttonTitle: 'Começar',
+        icon: 'smile',
+        nextScreen: 'PlantSelect',
+      });
     } catch (error) {
       Alert.alert('Não foi possivel salvar o seu nome 😥');
     }
