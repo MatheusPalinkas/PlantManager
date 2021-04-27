@@ -4,6 +4,7 @@ import React, {
   useState
 } from 'react';
 import {
+  Alert,
   Text,
   View,
 } from 'react-native';
@@ -14,7 +15,7 @@ import {
   PlantCardSecondary,
  } from '../../components';
 
-import { PlantProps, getPlants } from '../../libs/PlantsStorage';
+import { PlantProps, getPlants, removePlant } from '../../libs/PlantsStorage';
 
 import UserImg from '../../assets/palinkas.png';
 
@@ -29,6 +30,26 @@ export function MyPlants(){
   const [nextWaterd, setNextWaterd] = useState<string>();
 
 
+  function handleRemove(plant: PlantProps){
+    Alert.alert(
+      'Remover',
+      `Deseja remover a ${plant.name} ?`,
+      [{
+        text: 'Não 🙏',
+        style: 'cancel'
+      },
+      {
+        text: 'Sim  😥',
+        onPress: async () => {
+          try {
+            const plants = await removePlant(plant.id);
+            setMyPlants(plants);
+          } catch (error) {
+            Alert.alert('Não foi possivel remover! 😥')
+          }
+        }
+      }])
+  }
   const loadStorageData = useCallback(async() => {
     const plantsStoraged = await  getPlants();
     const nextTime = formatDistance(
@@ -72,6 +93,7 @@ export function MyPlants(){
             renderItem={({ item }) => (
               <PlantCardSecondary 
                 data={item}
+                handleRemove={() => handleRemove(item)}
               />
             )}
             showsVerticalScrollIndicator={false}

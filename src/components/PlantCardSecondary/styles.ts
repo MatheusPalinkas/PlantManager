@@ -6,11 +6,27 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.shape,
     width: '100%',
+    height: 100,
     padding: 20,
     borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10
+  },
+  remove:{
+    width: 80,
+  },
+  buttonRemove: {
+    width: 120,
+    marginTop: 10,
+    height: 100,
+    right: 40,
+    backgroundColor: colors.red,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    paddingLeft: 30,
   },
   title: {
     flex: 1,
