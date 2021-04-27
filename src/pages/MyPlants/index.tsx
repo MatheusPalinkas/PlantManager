@@ -1,12 +1,20 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState
+} from 'react';
 import {
   Text,
   View,
 } from 'react-native';
-import { PlantCardSecondary, Header, CardTip } from '../../components';
-import { getPlants } from '../../libs/PlantsStorage';
+import {
+  Header,
+  CardTip,
+  Loading,
+  PlantCardSecondary,
+ } from '../../components';
 
-import { PlantProps } from '../../libs/PlantsStorage';
+import { PlantProps, getPlants } from '../../libs/PlantsStorage';
 
 import UserImg from '../../assets/palinkas.png';
 
@@ -37,6 +45,8 @@ export function MyPlants(){
   useEffect(() => {
     loadStorageData();
   }, [loadStorageData]);
+
+  if(loading) return <Loading />;
 
   return (
     <View style={styles.container}>
