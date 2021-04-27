@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StorageKeys } from '../../utils/storageKeys';
+import { saveUser, getUser } from '../../libs/UserStorage';
 import {
   Text,
   View,
@@ -25,6 +24,14 @@ export function UserIndentification(){
   const [isFilled, setIsFilled] = useState(false);
   const [name, setName] = useState<string>();
 
+  useEffect(() => {
+    try {
+      getUser()
+        .then(userName => setName(userName));
+    } catch (error) {
+    }
+  }, []);
+
   function handleInputBlur(){
     setIsFocused(false);
     setIsFilled(!!name);
@@ -36,13 +43,12 @@ export function UserIndentification(){
     setIsFilled(!!value);
     setName(value);
   }
-
   async function handleSubmit(){
     if(!name) 
       return Alert.alert('Me diz como chamar você 😥');
 
     try {
-      await AsyncStorage.setItem(StorageKeys.userName, name);
+      await saveUser(name);
       navigate("Confirmation", {
         title: 'Prontinho',
         subTitle: 'Agora vamos começar a cuidar das suas plantinhas com muito cuidado.',

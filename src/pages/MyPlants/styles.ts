@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-import { getBottomSpace } from 'react-native-iphone-x-helper';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 
@@ -8,8 +7,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 30,
-    paddingTop: 50,
+    paddingHorizontal: 32,
     backgroundColor: colors.background
   },
   plants: {
@@ -17,8 +15,8 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 40,
   },
-  myPlantsScroll: {
-    paddingBottom: 60,
+  myPlantsContainer: {
+    flex: 1,
   },
   myPlants:{
     flex: 1,

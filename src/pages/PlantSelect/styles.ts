@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
   plants: {
     flex: 1,
     marginHorizontal: 32,
-    marginBottom: 40,
     justifyContent: 'center'
   },
   plantsList: {

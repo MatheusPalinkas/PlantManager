@@ -2,19 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   Text,
   View,
-  Image,
-  Alert,
-  Platform,
-  ScrollView,
-  TouchableOpacity,
 } from 'react-native';
-import { useRoute } from '@react-navigation/core';
-import DateTimePiker, {
-  Event
-} from '@react-native-community/datetimepicker';
-import { format, isBefore } from 'date-fns';
-import { SvgFromUri } from 'react-native-svg';
-import { savePlants } from '../../libs/PlantsStorage';
 import { PlantCardSecondary, Header, CardTip } from '../../components';
 import { getPlants } from '../../libs/PlantsStorage';
 
@@ -65,9 +53,8 @@ export function MyPlants(){
           Próximas regadas
         </Text>
 
-        <ScrollView
-          style={styles.myPlantsScroll}
-          showsVerticalScrollIndicator={false}
+        <View
+          style={styles.myPlantsContainer}
         >
           <FlatList
             data={myPlants}
@@ -78,9 +65,8 @@ export function MyPlants(){
               />
             )}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.myPlants}
           />
-        </ScrollView>
+        </View>
       </View>
     </View>
   );
