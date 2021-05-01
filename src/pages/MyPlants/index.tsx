@@ -17,7 +17,7 @@ import {
 
 import { PlantProps, getPlants, removePlant } from '../../libs/PlantsStorage';
 
-import UserImg from '../../assets/palinkas.png';
+import UserImg from '../../assets/user.png';
 
 import styles from './styles';
 import { formatDistance } from 'date-fns';

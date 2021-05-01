@@ -26,7 +26,7 @@ import {
 } from './IPlantSelect';
 import { PlantProps } from '../../libs/PlantsStorage';
 
-import UserImg from '../../assets/palinkas.png';
+import UserImg from '../../assets/user.png';
 
 import colors from '../../styles/colors';
 import styles from './styles';
